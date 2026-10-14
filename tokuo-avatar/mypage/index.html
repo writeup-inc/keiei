@@ -386,6 +386,78 @@ footer{font-size:12px;color:var(--ink-soft)}
 .ebubble p{margin:0;font-family:var(--f-kyo);font-size:16px;line-height:1.6;position:relative}
 .ebubble .k{position:relative}
 @container mock (max-width:520px){.eface{width:76px;height:76px}.eface span{display:none}.ebubble p{font-size:15px}}
+
+/* 調整9：A（スタンダード）とアバター画面のスマホ表示を整える */
+@media (max-width:600px){
+  .seg{border-radius:14px}
+  .seg button{font-size:13px;padding:6px 12px;min-height:36px}
+  .shellhead h1{font-size:22px}
+  .shellhead p{font-size:13px}
+}
+@container mock (max-width:760px){
+  .side{padding:6px 8px;gap:2px;scrollbar-width:none}
+  .side::-webkit-scrollbar{display:none}
+  .side button,.vb .side button{font-size:14px;padding:6px 12px;min-height:40px;margin:0}
+  .side ruby rt{display:none}
+  .main{padding:14px 12px 20px;gap:14px}
+  .panel{padding:14px}
+  .h{font-size:19px}
+  .wave{padding:16px 16px 36px}
+  .wave b{font-size:18px}
+  .wave span{font-size:12.5px}
+  .wave .sun{width:64px;height:64px;right:10px;top:6px}
+  .cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .cards .panel{padding:12px;gap:6px}
+  .v{font-size:19px}
+  .entryhead{gap:10px}
+  .eface{width:64px;height:64px;border-width:3px}
+  .eface span{display:none}
+  .ebubble{padding:8px 12px}
+  .ebubble p{font-size:14px}
+  .entry .moods .btn.mood{min-height:56px;padding:10px 12px;font-size:15px}
+  .btn.mood .mi{width:36px;height:36px}
+  .tabs button{padding:12px 16px;font-size:14px}
+}
+@container mock (max-width:900px){
+  .stage{flex-direction:row;justify-content:flex-start;gap:14px;padding:14px 16px;min-height:0;border-right:0;border-bottom:1px solid var(--frame-line);text-align:left;flex-wrap:wrap}
+  .face{width:84px;height:84px}
+  .vb .face{border-width:4px}
+  .stage .name{font-size:16px}
+  .stage .cap{display:none}
+  .vb .stage .sun{width:80px;height:80px;right:6%;top:4%}
+  .vb .stage svg.sea{height:44px}
+  .avatar{min-height:0}
+  .log{max-height:none;min-height:320px}
+  .steps{padding:10px 12px}
+  .inputbar{padding:10px 12px}
+  .mic{width:46px;height:46px}
+}
+
+/* 調整10：スマホのホームの縦幅を詰める */
+@media (max-width:600px){
+  .shellhead p{display:none}
+  .wrap{gap:12px;padding-block:16px 32px}
+}
+@container mock (max-width:760px){
+  .wave{padding:12px 14px 26px}
+  .wave b{font-size:16px;line-height:1.4}
+  .wave span{display:none}
+  .wave .sun{width:48px;height:48px}
+  .wave svg{height:22px}
+  .entry{gap:10px}
+  .entry h3{display:none}
+  .eface{width:52px;height:52px}
+  .ebubble p{font-size:13.5px;line-height:1.5}
+  .moods{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  .entry .moods .btn.mood{flex-direction:column;justify-content:center;text-align:center;min-height:0;padding:10px 6px;font-size:13px;line-height:1.35;gap:6px;border-radius:14px}
+  .entry .moods .btn.mood br{display:inline}
+  .btn.mood .mi{width:32px;height:32px}
+  .btn.mood .mi svg{width:18px;height:18px}
+  .entry .link{padding:2px;font-size:12.5px}
+  .cards .panel .note,.cards .panel .sample{display:none}
+  .cards .panel b{font-size:14px;line-height:1.45}
+  .cards .panel .link{font-size:12px}
+}
 @media (prefers-reduced-motion:no-preference){
   .center .halo{animation:glow 4s ease-in-out infinite alternate}
   .routes path{animation:sail 30s linear infinite}
@@ -460,7 +532,7 @@ footer{font-size:12px;color:var(--ink-soft)}
     return head+
       '<div class="panel entry"><h3>'+(true?rb([['先生','せんせい'],'に',['相談','そうだん'],'する']):'先生に相談する')+'</h3>'+
       '<div class="entryhead"><div class="eface" role="img" aria-label="徳尾先生（アバターのキャプチャーが入ります）">'+PERSON+'<span>アバター画像</span></div><div class="ebubble"><span class="k">'+rb([['徳尾','とくお'],' ',['先生','せんせい']])+'</span><p>きょうは、どんな気持ちですか。どれをえらんでも大丈夫ですよ。</p></div></div>'+
-      '<div class="row moods"><button type="button" class="btn mood" data-avatar="new" data-mood="moya"><span class="mi" aria-hidden="true">'+MOOD_IC.moya+'</span>もやもやを<br>聞いてほしい</button><button type="button" class="btn mood" data-avatar="new" data-mood="decide"><span class="mi" aria-hidden="true">'+MOOD_IC.decide+'</span>決めたいことが<br>ある</button><button type="button" class="btn mood warmish" data-sec="report"><span class="mi" aria-hidden="true">'+MOOD_IC.happy+'</span>うれしい報告が<br>ある</button></div>'+
+      '<div class="row moods"><button type="button" class="btn mood" data-avatar="new" data-mood="moya"><span class="mi" aria-hidden="true">'+MOOD_IC.moya+'</span>もやもやを<br>聞いてほしい</button><button type="button" class="btn mood" data-avatar="new" data-mood="decide"><span class="mi" aria-hidden="true">'+MOOD_IC.decide+'</span>決めたい<br>ことがある</button><button type="button" class="btn mood warmish" data-sec="report"><span class="mi" aria-hidden="true">'+MOOD_IC.happy+'</span>うれしい<br>報告がある</button></div>'+
       '<div class="row" style="gap:4px 16px"><button type="button" class="link" data-avatar="cont">前回「転職を考えている」の続きから</button><button type="button" class="link">学問分野から選んで相談する</button></div></div>'+
       '<div class="cards">'+
         '<div class="panel"><span class="k">今日の習慣</span><b>朝、今日やることを1つだけ書く</b><span class="note">あすの朝9時に、先生からおたよりが届きます</span></div>'+
@@ -700,7 +772,7 @@ footer{font-size:12px;color:var(--ink-soft)}
       '<div class="tc-bubble"><span class="tc-who">'+rb([['徳尾','とくお'],' ',['先生','せんせい']])+'</span>'+
       '<p>'+esc(st.cmt)+'</p>'+
       '<div class="tc-acts"><button type="button" data-avatar="new">'+esc(bc.act)+'</button></div></div></aside>';
-    return '<div class="world"><div class="worldhead"><b>やまださんの世界地図</b><span class="note">場所をえらぶと、それぞれのページがひらきます。</span><span class="bandchips" role="group" aria-label="時間帯をためす">'+['morning','day','evening','night'].map(function(k){return '<button type="button" data-band="'+k+'" aria-pressed="'+(band===k)+'">'+BANDS[k].name+'</button>';}).join('')+'</span><button type="button" class="callbtn" data-calldolphin="1">イルカを呼ぶ（確認用）</button><label class="sw" style="font-size:13px"><input type="checkbox" id="triviaT"'+(st.trivia?' checked':'')+'> '+(touchMode()?'長押しで豆知識':'止まると豆知識')+'</label></div>'+
+    return '<div class="world"><div class="worldhead"><b>やまださんの世界地図</b><span class="note">場所をえらぶと、それぞれのページがひらきます。</span></div>'+
       '<div class="mapwrap"><div class="mapscroll" id="mapScroll"><div class="map">'+svg+pins+dolphinHtml()+'<div class="boat" id="boat" aria-hidden="true">'+BOAT+'</div>'+compass+'<div class="tip" id="mapTip" role="status" hidden></div></div></div>'+comment+'<div class="panhint" aria-hidden="true">ゆびで地図を動かせます</div></div>'+
       '<nav class="toc" aria-label="地図の場所"><span class="tocl">場所の一覧</span>'+PLACES.map(function(p){return '<button type="button" data-fly="'+p[0]+'"><span class="tic" aria-hidden="true">'+IC[p[0]]+'</span>'+esc(p[1].split(/[・の]/)[0])+'<small>'+esc(p[2])+'</small></button>';}).join('')+'</nav></div>';
   }
