@@ -648,10 +648,9 @@ footer{background:var(--navy-d);color:rgba(255,255,255,.8);padding:44px 0 90px;f
       <form class="apply-form" id="applyForm" novalidate>
         <div class="fields">
           <div class="field full">
-            <label for="f-company">企業名<span class="req">必須</span></label>
+            <label for="f-company">企業名<span class="opt">任意</span></label>
             <input id="f-company" name="entry.1116326533" type="text" autocomplete="organization" placeholder="例）株式会社四日市製作所">
             <p class="hint">正式名称でご入力ください。</p>
-            <p class="err" data-for="f-company">企業名を入力してください。</p>
           </div>
           <div class="field">
             <label for="f-last">お名前（姓）<span class="req">必須</span></label>
@@ -735,7 +734,6 @@ footer{background:var(--navy-d);color:rgba(255,255,255,.8);padding:44px 0 90px;f
 const FORM_URL='https://docs.google.com/forms/d/e/1FAIpQLScDmm6ZmSbcLQNMtFehz8r24c0bFtvA4LrdWWJnQ0Rx0WM0Lg/formResponse';
 const form=document.getElementById('applyForm'),btn=document.getElementById('submitBtn'),ferr=document.getElementById('formError');
 const rules={
-  'f-company':v=>v.trim()!=='',
   'f-last':v=>v.trim()!=='',
   'f-first':v=>v.trim()!=='',
   'f-tel':v=>/^0\d{9,10}$/.test(v.replace(/[-ー－\s]/g,'').replace(/[０-９]/g,c=>String.fromCharCode(c.charCodeAt(0)-65248))),
@@ -754,7 +752,8 @@ form.addEventListener('submit',async e=>{
   try{
     await fetch(FORM_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams(new FormData(form)).toString()});
     sent=true;
-    document.getElementById('doneWho').textContent=document.getElementById('f-company').value+'　'+document.getElementById('f-last').value+' '+document.getElementById('f-first').value+' 様';
+    const co=document.getElementById('f-company').value.trim();
+    document.getElementById('doneWho').textContent=(co?co+'　':'')+document.getElementById('f-last').value+' '+document.getElementById('f-first').value+' 様';
     form.hidden=true;const done=document.getElementById('done');done.hidden=false;
     document.getElementById('apply').scrollIntoView({behavior:'smooth'});
   }catch(err){
