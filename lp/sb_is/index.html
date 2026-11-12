@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ソフトバンク 医療施設支援事業申込</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<style>
+/* Layout: 申請書類のような罫線と記入欄。上から「対象→流れ→同意→記入」の順に1本道で進む */
+:root{
+  --paper:#f6f7f9; --sheet:#ffffff; --ink:#18263a; --muted:#5b6778; --line:#d8dde5;
+  --indigo:#23406b; --indigo-soft:#e7edf6; --seal:#b8322a; --seal-soft:#fbecea; --ok:#2f7a55;
+  --f-display:"Shippori Mincho B1","Hiragino Mincho ProN","Yu Mincho",serif;
+  --f-body:"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#0f1520; --sheet:#161e2b; --ink:#e6eaf1; --muted:#9aa6b8; --line:#2a3546;
+  --indigo:#8fb0e0; --indigo-soft:#1d2a3f; --seal:#ec7a70; --seal-soft:#3a1f1e; --ok:#6cc79a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#0f1520; --sheet:#161e2b; --ink:#e6eaf1; --muted:#9aa6b8; --line:#2a3546;
+  --indigo:#8fb0e0; --indigo-soft:#1d2a3f; --seal:#ec7a70; --seal-soft:#3a1f1e; --ok:#6cc79a; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.85;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:760px;margin:0 auto;padding-block:40px 80px;display:flex;flex-direction:column;gap:56px}
+h1,h2{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.4}
+h2{font-size:1.45rem;display:flex;align-items:baseline;gap:12px}
+h2 .no{font-family:var(--f-body);font-size:.75rem;letter-spacing:.12em;color:var(--indigo);border:1px solid var(--indigo);padding:1px 8px;border-radius:2px;white-space:nowrap}
+p{margin:0}
+a{color:var(--indigo)}
+section{display:flex;flex-direction:column;gap:20px}
+.lead{color:var(--muted)}
+
+/* hero */
+.hero{border-top:6px solid var(--indigo);background:var(--sheet);padding:32px 28px;display:flex;flex-direction:column;gap:18px;border-bottom:1px solid var(--line)}
+.eyebrow{font-size:.78rem;letter-spacing:.14em;color:var(--indigo);font-weight:700}
+.hero h1{font-size:clamp(1.7rem,5vw,2.4rem);font-weight:800}
+.hero h1 em{font-style:normal;color:var(--indigo)}
+.hero-cta{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.btn{appearance:none;border:0;cursor:pointer;font:700 1rem var(--f-body);background:var(--indigo);color:var(--sheet);padding:14px 26px;border-radius:4px;text-decoration:none;display:inline-block}
+.btn:focus-visible,input:focus-visible,textarea:focus-visible,label.check:focus-within{outline:3px solid var(--indigo);outline-offset:2px}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.note{font-size:.85rem;color:var(--muted)}
+
+/* flow */
+.flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0;border:1px solid var(--line);background:var(--sheet)}
+.step{padding:18px 20px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:6px;min-width:0}
+.step:last-child{border-right:0}
+.step b{font-family:var(--f-display);font-size:1.05rem}
+.step .k{font-size:.72rem;letter-spacing:.12em;color:var(--indigo);font-weight:700}
+@media (max-width:640px){.step{border-right:0;border-bottom:1px solid var(--line)}.step:last-child{border-bottom:0}}
+
+/* consent */
+.consent{background:var(--sheet);border:1px solid var(--line)}
+.consent-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 20px;border-bottom:1px solid var(--line);background:var(--indigo-soft)}
+.meter{font-size:.85rem;font-weight:700;font-variant-numeric:tabular-nums}
+.meter[data-done="true"]{color:var(--ok)}
+.linkbtn{background:none;border:0;color:var(--indigo);font:inherit;font-size:.85rem;text-decoration:underline;cursor:pointer;padding:0}
+ol.checks{list-style:none;margin:0;padding:0;counter-reset:c}
+ol.checks li{counter-increment:c;border-bottom:1px solid var(--line)}
+ol.checks li:last-child{border-bottom:0}
+label.check{display:grid;grid-template-columns:28px 22px 1fr;gap:10px;align-items:start;padding:12px 20px;cursor:pointer}
+label.check::before{content:counter(c,decimal-leading-zero);font-size:.75rem;color:var(--muted);padding-top:3px;font-variant-numeric:tabular-nums}
+label.check input{width:18px;height:18px;margin-top:5px;accent-color:var(--indigo)}
+label.check:has(input:checked){background:var(--indigo-soft)}
+
+.box{border:1px solid var(--line);border-left:4px solid var(--seal);background:var(--sheet);padding:18px 20px;display:flex;flex-direction:column;gap:10px}
+.box.warn{border-left-color:var(--indigo)}
+.box h3{margin:0;font-size:1rem}
+.box ul{margin:0;padding-left:1.2em}
+.box .agree{display:flex;gap:10px;align-items:center;font-weight:700;border-top:1px dashed var(--line);padding-top:10px;cursor:pointer}
+.box .agree input{width:18px;height:18px;accent-color:var(--indigo)}
+.pay{font-weight:700}
+
+/* form */
+form{display:flex;flex-direction:column;gap:40px}
+fieldset{border:1px solid var(--line);background:var(--sheet);margin:0;padding:0}
+legend{font-family:var(--f-display);font-weight:800;font-size:1.1rem;padding:0 8px;margin-left:12px}
+.legend-note{padding:4px 20px 0;font-size:.85rem;color:var(--muted)}
+.row{display:grid;grid-template-columns:220px 1fr;gap:16px;padding:16px 20px;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.row>*{min-width:0}
+.row .lab{font-weight:700;font-size:.92rem;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.req,.opt{font-size:.7rem;font-weight:700;padding:0 6px;border-radius:2px;letter-spacing:.06em}
+.req{background:var(--seal);color:var(--sheet)}
+.opt{border:1px solid var(--muted);color:var(--muted)}
+.field{display:flex;flex-direction:column;gap:6px}
+.half{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+input[type=text],input[type=email],input[type=tel],input[type=date],textarea{width:100%;font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:3px;padding:10px 12px}
+textarea{min-height:110px;resize:vertical}
+input[type=file]{font:inherit;font-size:.88rem;max-width:100%}
+.hint{font-size:.8rem;color:var(--muted);line-height:1.6}
+.hint.red{color:var(--seal)}
+.err{font-size:.8rem;color:var(--seal);font-weight:700}
+@media (max-width:640px){.row{grid-template-columns:1fr;gap:8px}}
+
+.submit-area{display:flex;flex-direction:column;gap:14px;align-items:center;text-align:center;background:var(--sheet);border:1px solid var(--line);padding:28px 20px}
+.submit-area .agree{display:flex;gap:10px;align-items:center;cursor:pointer}
+.submit-area .agree input{width:18px;height:18px;accent-color:var(--indigo)}
+.remain{font-size:.85rem;color:var(--seal);font-weight:700}
+
+.done{background:var(--sheet);border:1px solid var(--ok);border-top:6px solid var(--ok);padding:28px;display:flex;flex-direction:column;gap:12px}
+.done h2{color:var(--ok)}
+footer{font-size:.8rem;color:var(--muted);border-top:1px solid var(--line);padding-top:16px}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+</style>
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<style>
+.block{background:var(--sheet);border:1px solid var(--line);display:flex;flex-direction:column}
+.block-body{padding:18px 20px;display:flex;flex-direction:column;gap:10px}
+.block h3{margin:0;font-size:1rem;display:flex;align-items:center;gap:8px}
+.block h3::before{content:"";width:8px;height:8px;background:var(--indigo);flex:none}
+.block ul{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:6px}
+.block ul ul{margin-top:4px;gap:2px;color:var(--muted)}
+.block .sub-note{font-size:.85rem;color:var(--muted)}
+.block .agree{display:flex;gap:10px;align-items:center;font-weight:700;cursor:pointer;padding:12px 20px;border-top:1px solid var(--line);background:var(--indigo-soft)}
+.block .agree input{width:18px;height:18px;accent-color:var(--indigo);flex:none}
+.block .agree:focus-within{outline:3px solid var(--indigo);outline-offset:-3px}
+.block:has(.agree input:checked) .agree{color:var(--ok)}
+.target{border-left:4px solid var(--indigo)}
+select{width:100%;max-width:280px;font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:3px;padding:10px 12px}
+</style>
+
+<div class="wrap">
+
+  <header class="hero">
+    <span class="eyebrow">ソフトバンクコンソーシアム　医療施設等経営強化緊急支援事業</span>
+    <h1>申請の申込みは<em>こちら</em></h1>
+    <p class="lead">下記のサポート対象者に当てはまる方は、事前同意事項に同意のうえ、申請する施設の情報をご入力ください。</p>
+    <div class="hero-cta">
+      <a class="btn" href="#target">サポート対象者を確認する</a>
+      <span class="note">見積書の添付と、ソフトバンクコンソーシアム確認番号（SBC25で始まるコード）が必要です</span>
+    </div>
+  </header>
+
+  <section id="target" aria-labelledby="target-h">
+    <h2 id="target-h"><span class="no">01</span>サポート対象者</h2>
+    <div class="block target">
+      <div class="block-body">
+        <ul>
+          <li>ソフトバンクコンソーシアムが導入支援する医療施設等経営強化緊急支援事業対象商品をこれから購入する方</li>
+          <li>ソフトバンクコンソーシアムが導入支援する医療施設等経営強化緊急支援事業対象商品のうち、購入したい対象の商品が既に決まっている方</li>
+          <li>ソフトバンクコンソーシアム確認番号をお持ちの方</li>
+          <li>補助金申請条件に合致している方
+            <ul>
+              <li>各都道府県の病院、有床診療所（医科・歯科）、無床診療所（医科・歯科）及び訪問看護ステーション</li>
+              <li>令和7年3月31日時点でベースアップ評価料を届け出ている</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="consent" aria-labelledby="consent-h">
+    <h2 id="consent-h"><span class="no">02</span>事前同意事項</h2>
+    <p class="lead">下記の内容は、すべてに同意していただく必要があります。</p>
+    <div class="block">
+      <div class="block-body">
+        <ul>
+          <li>サポート対象者（冒頭記載）の条件に合致している</li>
+          <li>本サポートは作業を代行するものではなく、電子申請画面の操作等の作業主体者は申請者自身となる</li>
+          <li>事前準備物が全て手配できている状態である（不足がある場合、交付申請を終えることができません）</li>
+          <li>電子申請画面への入力をパソコンを用いて自身で行うことができる（スマートフォン、タブレットは不可）<br><span class="sub-note">※状況に応じて、Google Meetを使用したオンラインMTGを実施する場合があります</span></li>
+          <li>医療施設等経営強化緊急支援事業は採択制であり、100%の採択を補償するものではない</li>
+          <li>補助対象にする商品が決まっている（交付申請MTGではソフトバンクが導入支援する医療施設等経営強化緊急支援事業の解説はできかねます）</li>
+        </ul>
+      </div>
+      <label class="agree"><input type="checkbox" id="agreePre">「事前同意事項」に同意する<span class="req">必須</span></label>
+    </div>
+  </section>
+
+  <section aria-labelledby="form-h" id="apply">
+    <h2 id="form-h"><span class="no">03</span>お申込み情報の入力</h2>
+
+    <form id="form" novalidate>
+      <fieldset>
+        <legend>申請する施設さま</legend>
+        <div class="row">
+          <div class="lab"><label for="company">会社名</label><span class="req">必須</span></div>
+          <div class="field">
+            <input type="text" id="company" name="company" required placeholder="例）医療法人社団〇〇会">
+            <span class="hint">ソフトバンクが導入支援する医療施設等経営強化緊急支援事業対象商品を購入する企業名、屋号または個人名をご入力ください。<br>GビズIDに登録いただいた名称と一致している必要があります。</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="lab">ご担当者名<span class="req">必須</span></div>
+          <div class="field">
+            <div class="half">
+              <input type="text" id="lastName" name="lastName" required aria-label="姓" placeholder="姓">
+              <input type="text" id="firstName" name="firstName" required aria-label="名" placeholder="名">
+            </div>
+            <span class="hint">経営者または従業員限定です。コンサルタントや顧問税理士は担当になれません。</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="lab"><label for="email">メールアドレス</label><span class="req">必須</span></div>
+          <div class="field">
+            <input type="email" id="email" name="email" required placeholder="example@clinic.jp">
+            <span class="hint">補助金申請画面を付与するメールアドレスです。</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="lab"><label for="tel">電話番号</label><span class="req">必須</span></div>
+          <div class="field">
+            <input type="tel" id="tel" name="tel" required placeholder="090-0000-0000">
+            <span class="hint">連絡がつきやすい番号をご入力ください（携帯番号推奨）。</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="lab"><label for="pref">都道府県</label><span class="req">必須</span></div>
+          <div class="field">
+            <select id="pref" name="pref" required><option value="">選択してください</option><option value="北海道">北海道</option><option value="青森県">青森県</option><option value="岩手県">岩手県</option><option value="宮城県">宮城県</option><option value="秋田県">秋田県</option><option value="山形県">山形県</option><option value="福島県">福島県</option><option value="茨城県">茨城県</option><option value="栃木県">栃木県</option><option value="群馬県">群馬県</option><option value="埼玉県">埼玉県</option><option value="千葉県">千葉県</option><option value="東京都">東京都</option><option value="神奈川県">神奈川県</option><option value="新潟県">新潟県</option><option value="富山県">富山県</option><option value="石川県">石川県</option><option value="福井県">福井県</option><option value="山梨県">山梨県</option><option value="長野県">長野県</option><option value="岐阜県">岐阜県</option><option value="静岡県">静岡県</option><option value="愛知県">愛知県</option><option value="三重県">三重県</option><option value="滋賀県">滋賀県</option><option value="京都府">京都府</option><option value="大阪府">大阪府</option><option value="兵庫県">兵庫県</option><option value="奈良県">奈良県</option><option value="和歌山県">和歌山県</option><option value="鳥取県">鳥取県</option><option value="島根県">島根県</option><option value="岡山県">岡山県</option><option value="広島県">広島県</option><option value="山口県">山口県</option><option value="徳島県">徳島県</option><option value="香川県">香川県</option><option value="愛媛県">愛媛県</option><option value="高知県">高知県</option><option value="福岡県">福岡県</option><option value="佐賀県">佐賀県</option><option value="長崎県">長崎県</option><option value="熊本県">熊本県</option><option value="大分県">大分県</option><option value="宮崎県">宮崎県</option><option value="鹿児島県">鹿児島県</option><option value="沖縄県">沖縄県</option></select>
+            <span class="hint">申請する施設の都道府県をお選びください。</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="lab"><label for="quote">補助対象商品の見積</label><span class="req">必須</span></div>
+          <div class="field">
+            <input type="file" id="quote" name="quote" required>
+            <span class="hint">ソフトバンクが導入支援する医療施設等経営強化緊急支援事業の見積を添付してください。</span>
+            <span class="hint red">見積は補助対象にする箇所のみを記載し、補助対象外の項目は記載しないでください。</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="lab"><label for="sbcNo">ソフトバンクコンソーシアム確認番号</label><span class="req">必須</span></div>
+          <div class="field">
+            <input type="text" id="sbcNo" name="sbcNo" required pattern="^\s*[Ss][Bb][Cc]25.*" placeholder="SBC25から始まるコード" autocomplete="off">
+            <span class="hint">SBC25で始まるコードを入力してください。</span>
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="submit-area">
+        <label class="agree"><input type="checkbox" id="privacy">「<a href="https://www.writeup.jp/privacy" target="_blank" rel="noopener">個人情報保護方針</a>」に同意する<span class="req">必須</span></label>
+        <p class="remain" id="remain" aria-live="polite"></p>
+        <button type="submit" class="btn" id="submit">申請サポートを依頼する</button>
+      </div>
+    </form>
+
+    <div class="done" id="done" hidden>
+      <h2>お申込みを受け付けました</h2>
+      <p>ご入力いただいた内容を確認のうえ、担当よりご連絡いたします。</p>
+      <p class="note" id="doneNote"></p>
+    </div>
+  </section>
+
+  <footer>株式会社ライトアップ　〒150-0002 東京都渋谷区渋谷2-15-1 渋谷クロスタワー32F</footer>
+</div>
+
+<script>
+/* ===== 設定 ===== */
+// GASのWebアプリURL（sb_itと同じURL）。空のままだと送信せずプレビュー動作になります
+const GAS_URL='https://script.google.com/macros/s/AKfycbyL0xGGc0Ow98NUUyk_CcSvccnjLehJISrVFpVQpclgQkK90iGhRHDlFi8gLetpyFkE/exec';
+// 添付ファイル1つあたりの上限（10MB）
+const MAX_FILE=10*1024*1024;
+/* ================ */
+(function(){
+  const form=document.getElementById('form');
+  const remain=document.getElementById('remain');
+  const agreePre=document.getElementById('agreePre');
+  const privacy=document.getElementById('privacy');
+
+  form.addEventListener('submit',e=>{
+    e.preventDefault();
+    const missing=[];
+    if(!agreePre.checked) missing.push('事前同意事項への同意');
+    let firstBad=null;
+    [...form.querySelectorAll('[required]')].forEach(el=>{
+      const bad=el.type==='file'?!el.files.length:!el.value.trim()||!el.checkValidity();
+      el.setAttribute('aria-invalid',bad?'true':'false');
+      el.style.borderColor=bad?'var(--seal)':'';
+      if(bad&&!firstBad) firstBad=el;
+    });
+    if(firstBad) missing.push('入力欄（赤枠の項目）');
+    const sbc=document.getElementById('sbcNo');
+    if(sbc.value.trim()&&!sbc.checkValidity()) missing.push('確認番号はSBC25で始まるコードを入力してください');
+    if(!privacy.checked) missing.push('個人情報保護方針への同意');
+    if(missing.length){
+      remain.textContent='未完了：'+missing.join('／');
+      if(!agreePre.checked) document.getElementById('consent').scrollIntoView();
+      else if(firstBad) firstBad.focus();
+      return;
+    }
+    const big=[...form.querySelectorAll('input[type=file]')].find(el=>el.files[0]&&el.files[0].size>MAX_FILE);
+    if(big){remain.textContent='添付ファイルは1つあたり10MBまでです。ファイルを小さくして添付し直してください。';big.focus();return;}
+    remain.textContent='';
+    send();
+  });
+
+  function readFile(input){
+    const f=input.files[0];
+    if(!f) return Promise.resolve(null);
+    return new Promise((res,rej)=>{
+      const r=new FileReader();
+      r.onload=()=>res({name:f.name,type:f.type||'application/octet-stream',data:String(r.result).split(',')[1]});
+      r.onerror=()=>rej(r.error);
+      r.readAsDataURL(f);
+    });
+  }
+
+  async function send(){
+    const btn=document.getElementById('submit');
+    btn.disabled=true;btn.textContent='送信しています…';
+    try{
+      const v=id=>document.getElementById(id).value.trim();
+      const payload={
+        formType:'sb_is',
+        company:v('company'),lastName:v('lastName'),firstName:v('firstName'),email:v('email'),tel:v('tel'),
+        pref:v('pref'),
+        sbcNo:v('sbcNo').toUpperCase(),
+        consents:'事前同意事項・個人情報保護方針に同意',
+        quote:await readFile(document.getElementById('quote'))
+      };
+      if(GAS_URL){
+        const r=await fetch(GAS_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});
+        const j=await r.json();
+        if(!j.ok) throw new Error(j.error||'送信に失敗しました');
+      }else{
+        document.getElementById('doneNote').textContent='※プレビュー表示のため、入力内容は送信されていません。';
+      }
+      form.hidden=true;
+      const d=document.getElementById('done');d.hidden=false;d.scrollIntoView();
+    }catch(err){
+      btn.disabled=false;btn.textContent='申請サポートを依頼する';
+      remain.textContent='送信できませんでした。通信環境を確認して、もう一度お試しください。（'+err.message+'）';
+    }
+  }
+})();
+</script>
+</body>
+</html>

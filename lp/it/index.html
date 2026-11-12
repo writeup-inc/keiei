@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI導入補助金 申請サポート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<style>
+/* Layout: 申請書類のような罫線と記入欄。上から「対象→流れ→同意→記入」の順に1本道で進む */
+:root{
+  --paper:#f6f7f9; --sheet:#ffffff; --ink:#18263a; --muted:#5b6778; --line:#d8dde5;
+  --indigo:#23406b; --indigo-soft:#e7edf6; --seal:#b8322a; --seal-soft:#fbecea; --ok:#2f7a55;
+  --f-display:"Shippori Mincho B1","Hiragino Mincho ProN","Yu Mincho",serif;
+  --f-body:"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#0f1520; --sheet:#161e2b; --ink:#e6eaf1; --muted:#9aa6b8; --line:#2a3546;
+  --indigo:#8fb0e0; --indigo-soft:#1d2a3f; --seal:#ec7a70; --seal-soft:#3a1f1e; --ok:#6cc79a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#0f1520; --sheet:#161e2b; --ink:#e6eaf1; --muted:#9aa6b8; --line:#2a3546;
+  --indigo:#8fb0e0; --indigo-soft:#1d2a3f; --seal:#ec7a70; --seal-soft:#3a1f1e; --ok:#6cc79a; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.85;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:760px;margin:0 auto;padding-block:40px 80px;display:flex;flex-direction:column;gap:56px}
+h1,h2{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.4}
+h2{font-size:1.45rem;display:flex;align-items:baseline;gap:12px}
+h2 .no{font-family:var(--f-body);font-size:.75rem;letter-spacing:.12em;color:var(--indigo);border:1px solid var(--indigo);padding:1px 8px;border-radius:2px;white-space:nowrap}
+p{margin:0}
+a{color:var(--indigo)}
+section{display:flex;flex-direction:column;gap:20px}
+.lead{color:var(--muted)}
+
+/* hero */
+.hero{border-top:6px solid var(--indigo);background:var(--sheet);padding:32px 28px;display:flex;flex-direction:column;gap:18px;border-bottom:1px solid var(--line)}
+.eyebrow{font-size:.78rem;letter-spacing:.14em;color:var(--indigo);font-weight:700}
+.hero h1{font-size:clamp(1.7rem,5vw,2.4rem);font-weight:800}
+.hero h1 em{font-style:normal;color:var(--indigo)}
+.hero-cta{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.btn{appearance:none;border:0;cursor:pointer;font:700 1rem var(--f-body);background:var(--indigo);color:var(--sheet);padding:14px 26px;border-radius:4px;text-decoration:none;display:inline-block}
+.btn:focus-visible,input:focus-visible,textarea:focus-visible,label.check:focus-within{outline:3px solid var(--indigo);outline-offset:2px}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.note{font-size:.85rem;color:var(--muted)}
+
+/* flow */
+.flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0;border:1px solid var(--line);background:var(--sheet)}
+.step{padding:18px 20px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:6px;min-width:0}
+.step:last-child{border-right:0}
+.step b{font-family:var(--f-display);font-size:1.05rem}
+.step .k{font-size:.72rem;letter-spacing:.12em;color:var(--indigo);font-weight:700}
+@media (max-width:640px){.step{border-right:0;border-bottom:1px solid var(--line)}.step:last-child{border-bottom:0}}
+
+/* consent */
+.consent{background:var(--sheet);border:1px solid var(--line)}
+.consent-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 20px;border-bottom:1px solid var(--line);background:var(--indigo-soft)}
+.meter{font-size:.85rem;font-weight:700;font-variant-numeric:tabular-nums}
+.meter[data-done="true"]{color:var(--ok)}
+.linkbtn{background:none;border:0;color:var(--indigo);font:inherit;font-size:.85rem;text-decoration:underline;cursor:pointer;padding:0}
+ol.checks{list-style:none;margin:0;padding:0;counter-reset:c}
+ol.checks li{counter-increment:c;border-bottom:1px solid var(--line)}
+ol.checks li:last-child{border-bottom:0}
+label.check{display:grid;grid-template-columns:28px 22px 1fr;gap:10px;align-items:start;padding:12px 20px;cursor:pointer}
+label.check::before{content:counter(c,decimal-leading-zero);font-size:.75rem;color:var(--muted);padding-top:3px;font-variant-numeric:tabular-nums}
+label.check input{width:18px;height:18px;margin-top:5px;accent-color:var(--indigo)}
+label.check:has(input:checked){background:var(--indigo-soft)}
+
+.box{border:1px solid var(--line);border-left:4px solid var(--seal);background:var(--sheet);padding:18px 20px;display:flex;flex-direction:column;gap:10px}
+.box.warn{border-left-color:var(--indigo)}
+.box h3{margin:0;font-size:1rem}
+.box ul{margin:0;padding-left:1.2em}
+.box .agree{display:flex;gap:10px;align-items:center;font-weight:700;border-top:1px dashed var(--line);padding-top:10px;cursor:pointer}
+.box .agree input{width:18px;height:18px;accent-color:var(--indigo)}
+.pay{font-weight:700}
+
+/* form */
+form{display:flex;flex-direction:column;gap:40px}
+fieldset{border:1px solid var(--line);background:var(--sheet);margin:0;padding:0}
+legend{font-family:var(--f-display);font-weight:800;font-size:1.1rem;padding:0 8px;margin-left:12px}
+.legend-note{padding:4px 20px 0;font-size:.85rem;color:var(--muted)}
+.row{display:grid;grid-template-columns:220px 1fr;gap:16px;padding:16px 20px;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.row>*{min-width:0}
+.row .lab{font-weight:700;font-size:.92rem;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.req,.opt{font-size:.7rem;font-weight:700;padding:0 6px;border-radius:2px;letter-spacing:.06em}
+.req{background:var(--seal);color:var(--sheet)}
+.opt{border:1px solid var(--muted);color:var(--muted)}
+.field{display:flex;flex-direction:column;gap:6px}
+.half{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+input[type=text],input[type=email],input[type=tel],input[type=date],textarea{width:100%;font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:3px;padding:10px 12px}
+textarea{min-height:110px;resize:vertical}
+input[type=file]{font:inherit;font-size:.88rem;max-width:100%}
+.hint{font-size:.8rem;color:var(--muted);line-height:1.6}
+.hint.red{color:var(--seal)}
+.err{font-size:.8rem;color:var(--seal);font-weight:700}
+@media (max-width:640px){.row{grid-template-columns:1fr;gap:8px}}
+
+.submit-area{display:flex;flex-direction:column;gap:14px;align-items:center;text-align:center;background:var(--sheet);border:1px solid var(--line);padding:28px 20px}
+.submit-area .agree{display:flex;gap:10px;align-items:center;cursor:pointer}
+.submit-area .agree input{width:18px;height:18px;accent-color:var(--indigo)}
+.remain{font-size:.85rem;color:var(--seal);font-weight:700}
+
+.done{background:var(--sheet);border:1px solid var(--ok);border-top:6px solid var(--ok);padding:28px;display:flex;flex-direction:column;gap:12px}
+.done h2{color:var(--ok)}
+footer{font-size:.8rem;color:var(--muted);border-top:1px solid var(--line);padding-top:16px}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+</style>
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="hero">
+    <h1>AI導入補助金（IT導入補助金）<br><em>交付申請サポート</em></h1>
+    <p class="lead">電子申請画面の操作は申請者さまご自身に行っていただきます。私たちはオンラインのミーティングで、必要書類の確認から入力の進め方までを横について伴走します。下の事前同意事項をご確認のうえ、お申込みください。</p>
+    <div class="hero-cta">
+      <a class="btn" href="#consent">事前同意事項を確認する</a>
+      <span class="note">所要時間の目安：同意と入力で約10分（見積書の添付が必要です）</span>
+    </div>
+  </header>
+
+  <section aria-labelledby="flow-h">
+    <h2 id="flow-h"><span class="no">流れ</span>お申込みから交付申請まで</h2>
+    <div class="flow">
+      <div class="step"><span class="k">STEP 1</span><b>このページで申込み</b><p class="note">同意事項の確認と、会社・見積の情報を送信します。</p></div>
+      <div class="step"><span class="k">STEP 2</span><b>事前準備ミーティング</b><p class="note">送信後に表示される予約画面で日程を選択。Google Meet（PC）で行います。</p></div>
+      <div class="step"><span class="k">STEP 3</span><b>交付申請</b><p class="note">必要書類がそろった状態で、申請者さまが電子申請を完了します。</p></div>
+    </div>
+  </section>
+
+  <section id="consent" aria-labelledby="consent-h">
+    <h2 id="consent-h"><span class="no">01</span>事前同意事項</h2>
+    <p class="lead">下記の内容は、すべてに同意していただく必要があります。</p>
+
+    <div class="consent">
+      <div class="consent-head">
+        <span class="meter" id="meter" aria-live="polite">12項目中 0項目に同意</span>
+        <button type="button" class="linkbtn" id="checkAll">すべて確認したので一括でチェック</button>
+      </div>
+      <ol class="checks" id="checks">
+        <li><label class="check"><input type="checkbox" id="c01"><span>サポート対象者（冒頭記載）の条件に合致している</span></label></li>
+        <li><label class="check"><input type="checkbox" id="c02"><span>本サポートは作業を代行するものではなく、電子申請画面の操作等の作業主体者は申請者自身となる</span></label></li>
+        <li><label class="check"><input type="checkbox" id="c03"><span>交付申請時までに、必要書類を全て手配できることを確認している（不足がある場合、交付申請を完了できません）</span></label></li>
+        <li><label class="check"><input type="checkbox" id="c04"><span>電子申請画面への入力をパソコンを用いて自身で行うことができる（スマートフォン、タブレットは不可）</span></label></li>
+        <li><label class="check"><input type="checkbox" id="c05"><span>Google Meetを使ったオンラインMTGにPCを通じて参加することができる（スマートフォン、タブレットは不可）</span></label></li>
+        <li><label class="check"><input type="checkbox" id="c06"><span>IT導入補助金は採択制であり、100%の採択を補償するものではない</span></label></li>
+        <li><label class="check"><input type="checkbox" id="c07"><span>採択後、ソフトウェア画面のキャプチャや請求書データ、振込明細等を準備可能である</span></label></li>
+        <li><label class="check"><input type="checkbox" id="c08"><span>採択後、年1回（最大3回）の効果報告を自身で実施することが可能である（業績等の簡易アンケート）</span></label></li>
+        <li><label class="check"><input type="checkbox" id="c09"><span>補助対象にする商品が決まっている（事前準備MTGではIT補助金対象商品の解説はできかねます）</span></label></li>
+        <li><label class="check"><input type="checkbox" id="c10"><span>補助対象期間（最大2年）内に本申請内容に該当するIT補助金対象商品を解約した場合、補助金返還となる可能性がある</span></label></li>
+        <li><label class="check"><input type="checkbox" id="c11"><span>採択後、速やかに申請したIT補助金対象商品の購入と支払を行う</span></label></li>
+        <li><label class="check"><input type="checkbox" id="c12"><span>IT補助金対象商品を利用する企業と、補助金を受け取る企業は完全同一である必要がある</span></label></li>
+      </ol>
+    </div>
+
+    <p class="pay">お支払いは、採択を受けた法人名義の口座またはカードにてお願いします。</p>
+
+    <div class="box">
+      <h3>申請できないケース</h3>
+      <ul>
+        <li>過去1年以内に同じ枠で交付を受けている場合</li>
+        <li>過去一度でもインボイス枠で交付決定を受けた場合は、インボイス枠での申請は不可（通常枠は可）</li>
+        <li>2026年3月31日以前に採択を受けた案件で、実績報告が未提出の状態では申請不可</li>
+      </ul>
+      <label class="agree"><input type="checkbox" id="agreeNg">上記を確認し、同意する<span class="req">必須</span></label>
+    </div>
+
+    <div class="box warn">
+      <h3>注意事項</h3>
+      <ul>
+        <li>2022年度以降に交付決定を受けた事業者は、賃金引上げ計画の従業員への表明が必須（未実施の場合は申請不可）</li>
+        <li>2024年または2025年に交付を受けたプロセスと、今回導入するソフトウェアが重複する場合は不採択となる</li>
+      </ul>
+      <label class="agree"><input type="checkbox" id="agreeCaution">上記を確認し、同意する<span class="req">必須</span></label>
+    </div>
+  </section>
+
+  <section aria-labelledby="form-h" id="apply">
+    <h2 id="form-h"><span class="no">02</span>お申込み情報の入力</h2>
+
+    <form id="form" novalidate>
+      <fieldset>
+        <legend>申請者さま（補助金を受け取る企業）</legend>
+        <div class="row">
+          <div class="lab"><label for="company">会社名</label><span class="req">必須</span></div>
+          <div class="field">
+            <input type="text" id="company" name="company" required autocomplete="organization" placeholder="例）株式会社サンプル商事">
+            <span class="hint">IT補助金対象商品を購入する企業名、屋号または個人名をご入力ください。<br>GビズIDに登録いただいた名称と一致している必要があります。</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="lab">ご担当者名<span class="req">必須</span></div>
+          <div class="field">
+            <div class="half">
+              <input type="text" id="lastName" name="lastName" required aria-label="姓" placeholder="姓" autocomplete="family-name">
+              <input type="text" id="firstName" name="firstName" required aria-label="名" placeholder="名" autocomplete="given-name">
+            </div>
+            <span class="hint">経営者または従業員に限ります。コンサルタントや顧問税理士は担当になれません。</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="lab"><label for="email">メールアドレス</label><span class="req">必須</span></div>
+          <div class="field">
+            <input type="email" id="email" name="email" required autocomplete="email" placeholder="example@company.co.jp">
+            <span class="hint">補助金申請画面を付与するメールアドレスです。</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="lab"><label for="tel">電話番号</label><span class="req">必須</span></div>
+          <div class="field">
+            <input type="tel" id="tel" name="tel" required autocomplete="tel" placeholder="090-0000-0000">
+            <span class="hint">連絡がつきやすい番号をご入力ください（携帯番号推奨）。</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="lab"><label for="quote">補助対象商品の見積</label><span class="req">必須</span></div>
+          <div class="field">
+            <input type="file" id="quote" name="quote" required>
+            <span class="hint red">見積は補助対象にする箇所のみを記載し、補助対象外の項目は記載しないでください。</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="lab"><label for="hearing">ヒアリングシート</label><span class="opt">任意</span></div>
+          <div class="field">
+            <input type="file" id="hearing" name="hearing">
+            <span class="hint">ご入力できた方のみ添付してください。</span>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>支援事業者（ツール提供者）</legend>
+        <p class="legend-note">本フォームを投稿する支援事業者さまの情報をご記入ください。</p>
+        <div class="row">
+          <div class="lab"><label for="vendor">支援事業者名（貴社名）</label><span class="req">必須</span></div>
+          <div class="field">
+            <input type="text" id="vendor" name="vendor" required placeholder="例）株式会社〇〇">
+            <span class="hint">「株式会社」等を含め、正式名称でご記載ください。</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="lab"><label for="rep">営業担当名</label><span class="req">必須</span></div>
+          <div class="field"><input type="text" id="rep" name="rep" required></div>
+        </div>
+        <div class="row">
+          <div class="lab"><label for="repTel">営業担当の電話番号</label><span class="req">必須</span></div>
+          <div class="field"><input type="tel" id="repTel" name="repTel" required></div>
+        </div>
+        <div class="row">
+          <div class="lab"><label for="repEmail">営業担当のメールアドレス</label><span class="req">必須</span></div>
+          <div class="field"><input type="email" id="repEmail" name="repEmail" required></div>
+        </div>
+        <div class="row">
+          <div class="lab"><label for="memo">引継事項・備考</label><span class="opt">任意</span></div>
+          <div class="field">
+            <textarea id="memo" name="memo" placeholder="希望公募回／取得済みの事前準備物／その他引継ぎ事項"></textarea>
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="submit-area">
+        <p class="note">送信すると、事前準備ミーティングの日程予約画面に進みます。</p>
+        <label class="agree"><input type="checkbox" id="privacy">「<a href="https://www.writeup.jp/privacy" target="_blank" rel="noopener">個人情報保護方針</a>」に同意する<span class="req">必須</span></label>
+        <p class="remain" id="remain" aria-live="polite"></p>
+        <button type="submit" class="btn" id="submit">送信して事前準備ミーティングを予約する</button>
+      </div>
+    </form>
+
+    <div class="done" id="done" hidden>
+      <h2>お申込みを受け付けました</h2>
+      <p>続けて、事前準備ミーティングの日程をご予約ください。ご予約いただいた日時に、Google Meet（PC）でお待ちしております。</p>
+      <p><a class="btn" id="bookLink" href="https://timerex.net/s/wu/244fba13/" target="_blank" rel="noopener">事前準備ミーティングの日程を予約する</a></p>
+      <p class="note" id="redirectNote"></p>
+    </div>
+  </section>
+
+  <footer>株式会社ライトアップ　〒150-0002 東京都渋谷区渋谷2-15-1 渋谷クロスタワー32F</footer>
+</div>
+
+<script>
+/* ===== 設定 ===== */
+// GASのWebアプリURL（デプロイ後に貼り付け）。空のままだと送信せずプレビュー動作になります
+const GAS_URL='https://script.google.com/macros/s/AKfycbyXCoNcA0DSVpJKVLSorwWB1MIkh4U2HTOMlTGr1Vm7ImW8KnSiY3tkpRTeUrer7VJHWg/exec';
+// 事前準備ミーティングの予約ページ（TimeRex）
+const TIMEREX_URL='https://timerex.net/s/wu/244fba13/';
+// 添付ファイル1つあたりの上限（10MB）
+const MAX_FILE=10*1024*1024;
+/* ================ */
+(function(){
+  const checks=[...document.querySelectorAll('#checks input')];
+  const meter=document.getElementById('meter');
+  const extra=['agreeNg','agreeCaution','privacy'].map(id=>document.getElementById(id));
+  const form=document.getElementById('form');
+  const remain=document.getElementById('remain');
+  function update(){
+    const n=checks.filter(c=>c.checked).length;
+    meter.textContent=`${checks.length}項目中 ${n}項目に同意`;
+    meter.dataset.done=String(n===checks.length);
+  }
+  checks.forEach(c=>c.addEventListener('change',update));
+  document.getElementById('checkAll').addEventListener('click',()=>{checks.forEach(c=>c.checked=true);update();});
+  update();
+
+  form.addEventListener('submit',e=>{
+    e.preventDefault();
+    const missing=[];
+    const nCheck=checks.filter(c=>!c.checked).length;
+    if(nCheck) missing.push(`事前同意事項（残り${nCheck}項目）`);
+    if(!extra[0].checked) missing.push('申請できないケースへの同意');
+    if(!extra[1].checked) missing.push('注意事項への同意');
+    const req=[...form.querySelectorAll('[required]')];
+    let firstBad=null;
+    req.forEach(el=>{
+      const bad=el.type==='file'?!el.files.length:!el.value.trim()||!el.checkValidity();
+      el.setAttribute('aria-invalid',bad?'true':'false');
+      el.style.borderColor=bad?'var(--seal)':'';
+      if(bad&&!firstBad) firstBad=el;
+    });
+    if(firstBad) missing.push('入力欄（赤枠の項目）');
+    if(!extra[2].checked) missing.push('個人情報の取扱いへの同意');
+    if(missing.length){
+      remain.textContent='未完了：'+missing.join('／');
+      if(nCheck||!extra[0].checked||!extra[1].checked) document.getElementById('consent').scrollIntoView();
+      else if(firstBad) firstBad.focus();
+      return;
+    }
+    const big=[...form.querySelectorAll('input[type=file]')].find(el=>el.files[0]&&el.files[0].size>MAX_FILE);
+    if(big){remain.textContent='添付ファイルは1つあたり10MBまでです。ファイルを小さくして添付し直してください。';big.focus();return;}
+    remain.textContent='';
+    send();
+  });
+
+  function readFile(input){
+    const f=input.files[0];
+    if(!f) return Promise.resolve(null);
+    return new Promise((res,rej)=>{
+      const r=new FileReader();
+      r.onload=()=>res({name:f.name,type:f.type||'application/octet-stream',data:String(r.result).split(',')[1]});
+      r.onerror=()=>rej(r.error);
+      r.readAsDataURL(f);
+    });
+  }
+
+  async function send(){
+    const btn=document.getElementById('submit');
+    btn.disabled=true;btn.textContent='送信しています…';
+    try{
+      const v=id=>document.getElementById(id).value.trim();
+      const payload={
+        company:v('company'),lastName:v('lastName'),firstName:v('firstName'),email:v('email'),tel:v('tel'),
+        vendor:v('vendor'),rep:v('rep'),repTel:v('repTel'),repEmail:v('repEmail'),memo:v('memo'),
+        consents:'事前同意12項目・申請不可・注意事項・個人情報保護方針に同意',
+        quote:await readFile(document.getElementById('quote')),
+        hearing:await readFile(document.getElementById('hearing'))
+      };
+      if(GAS_URL){
+        const r=await fetch(GAS_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});
+        const j=await r.json();
+        if(!j.ok) throw new Error(j.error||'送信に失敗しました');
+      }
+      form.hidden=true;
+      const d=document.getElementById('done');d.hidden=false;d.scrollIntoView();
+      const note=document.getElementById('redirectNote');
+      if(GAS_URL){
+        note.textContent='3秒後に予約画面へ自動で移動します。移動しない場合は上のボタンを押してください。';
+        setTimeout(()=>{location.href=TIMEREX_URL;},3000);
+      }else{
+        note.textContent='※プレビュー表示のため、入力内容は送信されていません。';
+      }
+    }catch(err){
+      btn.disabled=false;btn.textContent='送信して事前準備ミーティングを予約する';
+      remain.textContent='送信できませんでした。通信環境を確認して、もう一度お試しください。（'+err.message+'）';
+    }
+  }
+})();
+</script>
+</body>
+</html>
